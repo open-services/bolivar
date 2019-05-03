@@ -1,6 +1,9 @@
 # Bolivar
 > Federated Open-Registry proxy for p2p sharing of packages
 
+
+[![Imagelink](https://i.imgur.com/g9jEN6T.png)](https://www.youtube.com/watch?v=VA1HibxXOx0)
+
 ## Introduction
 
 Bolivar is a prototype to move the registry closer to wherever you are, and
