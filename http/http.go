@@ -14,6 +14,7 @@ import (
 	ipfslite "github.com/hsanjuan/ipfs-lite"
 	cid "github.com/ipfs/go-cid"
 	format "github.com/ipfs/go-ipld-format"
+	"github.com/ipfs/go-unixfs/hamt"
 	"github.com/open-services/bolivar/cli"
 	"github.com/open-services/bolivar/p2p"
 )
@@ -69,12 +70,18 @@ func GetNode(node *ipfslite.Peer, hash string) format.Node {
 // FindLink takes a link name and a hash, returns the hash of that link or ""
 func FindLink(pkg string, hash string) string {
 	dnode := GetNode(libp2pNode, hash)
-	for _, link := range dnode.Links() {
-		if link.Name == pkg {
-			return link.Cid.String()
-		}
+
+	// TODO should only do this once from each root hash
+	shard, err := hamt.NewHamtFromDag(libp2pNode.DAGService, dnode)
+	if err != nil {
+		panic(err)
 	}
-	return ""
+	ctx := context.Background()
+	link, err := shard.Find(ctx, pkg)
+	if err != nil {
+		return ""
+	}
+	return link.Cid.String()
 }
 
 // MetricsHandler returns total and current bandwidth
@@ -100,9 +107,6 @@ func MetadataHandler(w gohttp.ResponseWriter, r *gohttp.Request) {
 		}
 	}
 	packageName := vars["package"]
-
-	// fmt.Println("[metadata] " + packageName)
-	// fmt.Println(rootHash)
 
 	packageHash := FindLink(packageName, rootHash)
 	if packageHash == "" {

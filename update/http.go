@@ -29,7 +29,7 @@ func getJSON(userAgent, url string, target interface{}) error {
 	r.Header.Set("User-Agent", userAgent)
 	resp, err := myClient.Do(r)
 	if err != nil {
-		panic(err)
+		return err
 	}
 	defer func() {
 		err := resp.Body.Close()
