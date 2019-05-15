@@ -51,7 +51,36 @@ func main() {
 		fmt.Println(addr)
 	}
 
-	p2p.ConnectToPeer(libp2pNode, h, appConfig.FederateAddr)
+	err := p2p.ConnectToPeer(libp2pNode, h, appConfig.FederateAddr)
+	if err != nil {
+		panic(err)
+	}
+	// make sure we're connected to federate addr always
+	go func() {
+		// TODO should check the peer id from the federate addr
+		orID := "QmbNjMCXkwt7fyBBWc3R8mZzrX8KebkCo4Qv67wVmCH5Aa"
+		for {
+			time.Sleep(5 * time.Second)
+			conns := h.Network().Conns()
+
+			foundOR := false
+			for _, conn := range conns {
+				if conn.RemotePeer().String() == orID {
+					foundOR = true
+				}
+			}
+
+			if !foundOR {
+				log.Println("Lost connection to OR for some reason")
+				log.Println("reconnecting")
+				err := p2p.ConnectToPeer(libp2pNode, h, appConfig.FederateAddr)
+				if err != nil {
+					panic(err)
+				}
+				log.Println("reconnected")
+			}
+		}
+	}()
 
 	log.Fatal(http.StartServer(appConfig, libp2pNode))
 }

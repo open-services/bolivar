@@ -82,38 +82,39 @@ func SetupLibp2p(
 		return nil, nil, err
 	}
 
+	firstResult := false
+
 	// reporting
 	go func() {
-		orID := "QmbNjMCXkwt7fyBBWc3R8mZzrX8KebkCo4Qv67wVmCH5Aa"
+		for {
+			time.Sleep(100 * time.Millisecond)
+			// bandwidth
+			stats := rep.GetBandwidthTotals()
+			CurrentStats = &stats
+			firstResult = true
+		}
+	}()
+
+	go func() {
 		for {
 			time.Sleep(1 * time.Second)
 			// peers
 			conns := h.Network().Conns()
 			numPeers := strconv.Itoa(len(conns))
 
-			foundOR := false
-			for _, conn := range conns {
-				if conn.RemotePeer().String() == orID {
-					foundOR = true
-				}
-			}
+			if firstResult {
+				stats := CurrentStats
 
-			if !foundOR {
-				panic("Lost connection to OR for some reason")
+				// spew.Dump(stats)
+				bwMessage := "%s|%s [%s/s|%s/s] (Peers: %s)"
+				fmt.Println(fmt.Sprintf(bwMessage,
+					humanize.Bytes(uint64(stats.TotalIn)),
+					humanize.Bytes(uint64(stats.TotalOut)),
+					humanize.Bytes(uint64(stats.RateIn)),
+					humanize.Bytes(uint64(stats.RateOut)),
+					numPeers,
+				))
 			}
-
-			// bandwidth
-			stats := rep.GetBandwidthTotals()
-			CurrentStats = &stats
-			// spew.Dump(stats)
-			bwMessage := "%s|%s [%s/s|%s/s] (Peers: %s)"
-			fmt.Println(fmt.Sprintf(bwMessage,
-				humanize.Bytes(uint64(stats.TotalIn)),
-				humanize.Bytes(uint64(stats.TotalOut)),
-				humanize.Bytes(uint64(stats.RateIn)),
-				humanize.Bytes(uint64(stats.RateOut)),
-				numPeers,
-			))
 		}
 	}()
 
@@ -204,15 +205,15 @@ func StartLibp2p(config cli.Config) (*ipfslite.Peer, host.Host) {
 }
 
 // ConnectToPeer bootstraps with a peer to keep the connection open for as long as possible
-func ConnectToPeer(node *ipfslite.Peer, h host.Host, ma string) {
+func ConnectToPeer(node *ipfslite.Peer, h host.Host, ma string) error {
 	fmt.Println("Connecting to open-registry.dev libp2p node...")
 	openRegistryAddr, err := multiaddr.NewMultiaddr(ma)
 	if err != nil {
-		panic(err)
+		return err
 	}
 	orPeerInfo, err := peerstore.InfoFromP2pAddr(openRegistryAddr)
 	if err != nil {
-		panic(err)
+		return err
 	}
 	peers := []peerstore.PeerInfo{}
 	peers = append(peers, *orPeerInfo)
@@ -221,4 +222,5 @@ func ConnectToPeer(node *ipfslite.Peer, h host.Host, ma string) {
 	fmt.Println("Connected")
 	h.ConnManager().Protect(orPeerInfo.ID, "bootstrap")
 	fmt.Println("Think we protected a bootstrap peer from being killed too")
+	return nil
 }

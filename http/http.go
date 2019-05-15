@@ -136,10 +136,11 @@ func MetadataHandler(w gohttp.ResponseWriter, r *gohttp.Request) {
 		panic(err)
 	}
 
+	newAddress := []byte("http://" + r.Host)
+
 	result := bytes.Replace(buf,
 		[]byte("https://npm.open-registry.dev"),
-		// TODO should be based on httpAddress + httpPort
-		[]byte("http://localhost:8080"),
+		newAddress,
 		-1)
 
 	_, err = w.Write(result)

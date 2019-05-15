@@ -8,7 +8,7 @@ import (
 )
 
 // should be using dnsaddr (currently hardcoded peerID)
-var openRegistryMultiaddr = "/dns4/npm.open-registry.dev/tcp/4001/ipfs/QmbNjMCXkwt7fyBBWc3R8mZzrX8KebkCo4Qv67wVmCH5Aa"
+var openRegistryMultiaddr = "/dns4/npm.open-registry.dev/tcp/4001/ipfs/QmYPJrFYfohS7zcT6aVjbGfWxMfm5GhN6qChVrUdLDjaEH"
 
 // what path should our libp2p node listen at
 var defaultListenAddr = "/ip4/0.0.0.0/tcp/4005"
