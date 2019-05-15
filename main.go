@@ -58,7 +58,7 @@ func main() {
 	// make sure we're connected to federate addr always
 	go func() {
 		// TODO should check the peer id from the federate addr
-		orID := "QmbNjMCXkwt7fyBBWc3R8mZzrX8KebkCo4Qv67wVmCH5Aa"
+		orID := "QmYPJrFYfohS7zcT6aVjbGfWxMfm5GhN6qChVrUdLDjaEH"
 		for {
 			time.Sleep(5 * time.Second)
 			conns := h.Network().Conns()
