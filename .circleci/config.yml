@@ -2,9 +2,11 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/golang:1.9
+      - image: circleci/golang:1.12
     working_directory: /go/src/github.com/open-services/bolivar
     steps:
       - setup_remote_docker
       - checkout
-      - run: make
+      - run: go get -v ./...
+      - run: make lint
+      - run: make test
