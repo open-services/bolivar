@@ -6,6 +6,7 @@ import (
 	"time"
 
 	ipfslite "github.com/hsanjuan/ipfs-lite"
+	multiaddr "github.com/multiformats/go-multiaddr"
 	"github.com/open-services/bolivar/cli"
 	http "github.com/open-services/bolivar/http"
 	"github.com/open-services/bolivar/p2p"
@@ -57,15 +58,23 @@ func main() {
 	}
 	// make sure we're connected to federate addr always
 	go func() {
-		// TODO should check the peer id from the federate addr
-		orID := "QmYPJrFYfohS7zcT6aVjbGfWxMfm5GhN6qChVrUdLDjaEH"
+		ma, err := multiaddr.NewMultiaddr(appConfig.FederateAddr)
+		if err != nil {
+			panic(err)
+		}
+		// Protocol ID from https://github.com/multiformats/go-multiaddr/blob/e1825f7b50d1dcebdaa28bc31a310fa2be4c00ee/protocols.go#L17
+
+		fedID, err := ma.ValueForProtocol(0x01A5)
+		if err != nil {
+			panic(err)
+		}
 		for {
 			time.Sleep(5 * time.Second)
 			conns := h.Network().Conns()
 
 			foundOR := false
 			for _, conn := range conns {
-				if conn.RemotePeer().String() == orID {
+				if conn.RemotePeer().String() == fedID {
 					foundOR = true
 				}
 			}
