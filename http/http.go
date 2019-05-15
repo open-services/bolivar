@@ -69,9 +69,7 @@ func GetNode(node *ipfslite.Peer, hash string) format.Node {
 // FindLink takes a link name and a hash, returns the hash of that link or ""
 func FindLink(pkg string, hash string) string {
 	dnode := GetNode(libp2pNode, hash)
-	// fmt.Println(pkg)
 	for _, link := range dnode.Links() {
-		// fmt.Println(link.Name)
 		if link.Name == pkg {
 			return link.Cid.String()
 		}
@@ -96,8 +94,8 @@ func MetadataHandler(w gohttp.ResponseWriter, r *gohttp.Request) {
 		if rootHash == "" {
 			// fetch via http as we're missing the scope + package fully
 			fmt.Println("Couldnt find that scope")
-			// npm client uses &2f instead of /
-			FetchMetadataViaHTTP(w, vars["scope"]+"&2f"+vars["package"])
+			// npm client uses %2f instead of /
+			FetchMetadataViaHTTP(w, vars["scope"]+"%2f"+vars["package"])
 			return
 		}
 	}
