@@ -55,6 +55,8 @@ func main() {
 
 	connectAndReconnect(libp2pNode, h, appConfig.FederateAddr)
 
+	// TODO should start immediately and hang requests until we have the libp2p
+	// node ready and connected
 	log.Fatal(http.StartServer(appConfig, libp2pNode))
 }
 

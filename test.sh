@@ -21,4 +21,7 @@ docker exec -it $CONTAINER_ID git clone https://github.com/webpack/webpack.git -
 
 docker exec -it $CONTAINER_ID yarn config set registry http://localhost:8080
 
+# Give the Bolivar HTTP server a chance to start
+sleep 5
+
 time docker exec -it $CONTAINER_ID bash -c "cd /app && rm yarn.lock && yarn install --verbose --non-interactive"
