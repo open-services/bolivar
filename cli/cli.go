@@ -7,8 +7,8 @@ import (
 	kingpin "gopkg.in/alecthomas/kingpin.v2"
 )
 
-// should be using dnsaddr (currently hardcoded peerID)
-var openRegistryMultiaddr = "/dns4/npm.open-registry.dev/tcp/4001/ipfs/QmYPJrFYfohS7zcT6aVjbGfWxMfm5GhN6qChVrUdLDjaEH"
+// TODO should be using dnsaddr (currently hardcoded peerID)
+var openRegistryMultiaddr = "/dns4/npm.open-registry.dev/tcp/4001/ipfs/QmdAgn46prB29nfW1fSoKJsehma7DL6C3yygjCaVKYxcFw"
 
 // what path should our libp2p node listen at
 var defaultListenAddr = "/ip4/0.0.0.0/tcp/4005"
