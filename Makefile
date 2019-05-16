@@ -8,7 +8,7 @@ BIN_DIR := $(GOPATH)/bin
 GOMETALINTER := $(BIN_DIR)/golangci-lint
 
 $(GOMETALINTER):
-	curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh -s -- -b $(go env GOPATH)/bin v1.16.0
+	go get -u github.com/golangci/golangci-lint/cmd/golangci-lint
 
 .PHONY: lint
 lint: $(GOMETALINTER)
