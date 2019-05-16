@@ -5,15 +5,14 @@ test: linux
 	bash test.sh
 
 BIN_DIR := $(GOPATH)/bin
-GOMETALINTER := $(BIN_DIR)/gometalinter
+GOMETALINTER := $(BIN_DIR)/golangci-lint
 
 $(GOMETALINTER):
-	go get -u github.com/alecthomas/gometalinter
-	gometalinter --install &> /dev/null
+	go get -u github.com/golangci/golangci-lint/cmd/golangci-lint
 
 .PHONY: lint
 lint: $(GOMETALINTER)
-	gometalinter ./... --vendor
+	golangci-lint run -v ./...
 
 BINARY := bolivar
 VERSION ?= vlatest
