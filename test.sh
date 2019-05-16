@@ -7,6 +7,9 @@ docker build -t open-services/bolivar .
 CONTAINER_ID=$(docker run -d open-services/bolivar)
 
 function finish {
+  echo "Showing you the logs from the container before kill/rm"
+  docker logs $CONTAINER_ID
+  echo "## END LOGS"
   docker kill $CONTAINER_ID
   docker rm $CONTAINER_ID
 }
