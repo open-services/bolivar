@@ -8,6 +8,8 @@ import (
 
 	humanize "github.com/dustin/go-humanize"
 	ipfslite "github.com/hsanjuan/ipfs-lite"
+	ds "github.com/ipfs/go-datastore"
+	ds_sync "github.com/ipfs/go-datastore/sync"
 	golog "github.com/ipfs/go-log"
 	libp2p "github.com/libp2p/go-libp2p"
 	connmgr "github.com/libp2p/go-libp2p-connmgr"
@@ -118,7 +120,8 @@ func SetupLibp2p(
 		}
 	}()
 
-	idht, err := dht.New(ctx, h)
+	dstore := ds_sync.MutexWrap(ds.NewMapDatastore())
+	idht := dht.NewDHTClient(ctx, h, dstore)
 	if err != nil {
 		nerr := h.Close()
 		if nerr != nil {
