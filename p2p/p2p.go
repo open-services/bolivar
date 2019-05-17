@@ -122,14 +122,6 @@ func SetupLibp2p(
 
 	dstore := ds_sync.MutexWrap(ds.NewMapDatastore())
 	idht := dht.NewDHTClient(ctx, h, dstore)
-	if err != nil {
-		nerr := h.Close()
-		if nerr != nil {
-			return nil, nil, nerr
-		}
-		return nil, nil, err
-	}
-
 	rHost := routedhost.Wrap(h, idht)
 	return rHost, idht, nil
 }
