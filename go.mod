@@ -21,6 +21,7 @@ require (
 	github.com/libp2p/go-libp2p-metrics v0.0.1
 	github.com/libp2p/go-libp2p-peerstore v0.0.5
 	github.com/libp2p/go-libp2p-pnet v0.0.1
+	github.com/mitchellh/go-homedir v1.1.0
 	github.com/multiformats/go-multiaddr v0.0.2
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
 )
