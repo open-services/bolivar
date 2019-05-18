@@ -2,8 +2,10 @@ package cli
 
 import (
 	"log"
+	"path"
 
 	"github.com/davecgh/go-spew/spew"
+	homedir "github.com/mitchellh/go-homedir"
 	kingpin "gopkg.in/alecthomas/kingpin.v2"
 )
 
@@ -15,7 +17,7 @@ var defaultListenAddr = "/ip4/0.0.0.0/tcp/4005"
 
 // what path should we use to store data
 // TODO should point to directory in homedir by default
-var defaultRepoPath = "ipfs-test-repo"
+var defaultRepoPath = getDefaultRepoPath()
 
 // what address to set HTTP server to listen to
 var defaultHTTPAddress = "localhost"
@@ -52,6 +54,15 @@ type Config struct {
 	HTTPAddress  string
 	HTTPPort     string
 	HTTPEndpoint string
+}
+
+func getDefaultRepoPath() string {
+	home, err := homedir.Dir()
+	if err != nil {
+		panic(err)
+	}
+	p := path.Join(home, ".bolivar")
+	return p
 }
 
 // Init initializes the cli
